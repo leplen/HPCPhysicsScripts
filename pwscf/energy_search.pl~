@@ -1,0 +1,21 @@
+#!/usr/bin/perl
+
+use warnings;
+
+@files=`ls`;
+
+#print @files;
+
+foreach(@files) {
+if(/\d+/) {push @dirs, $_};
+}
+foreach(@dirs) {
+chomp;
+chomp(@lines=`grep -a "!   " "$_/$ARGV[0]"`);
+unless(@lines) {next};
+$lines[-1] =~m/(-\d+\.\d+)/;
+$enlast=$1;
+$lines[-2] =~m/(-\d+\.\d+)/;
+$ennotlast=$1;
+$diff=$enlast-$ennotlast;
+print "$_   EN: $enlast  Conv: $diff Hello Jenny\n ";} 
