@@ -1,0 +1,3 @@
+#Ignore linux autobackup and vi temp files
+*.swp
+*~
