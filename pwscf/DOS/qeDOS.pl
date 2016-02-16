@@ -2,15 +2,14 @@
 #
 #use warnings;
 # 
-# This used to try and do some really clever fixing of the fermi levels based off of the 1s levels of Li.
-# Apparently that was a bad idea because those levels weren't that stable. Most of the fermi stuff has been
-# commented out, but I haven't checked it super carefully.
-#
+#Plots the partial density of states broken up by atom type and optionally
+#by user defined regions in real space see the @regions array lines 25-30 
+
 use 5.010; #provides the say command
 use Getopt::Std;
 
 my %args;
-getopt('f', \%args);
+getopt('f', \%args); #optional commandline arguments are r and f 
 
 $PSfile=0;
 $slices=1;
@@ -25,7 +24,6 @@ if($dim==1){$dimName='x'} elsif ($dim==2){$dimName='y'}elsif($dim==3){$dimName='
 my @regions;
 unless($slices) {@regions=(0,1)}
 else {
-  #  @regions=(0,20,40,60, 100); 
     @regions=(0,30,35,100);
     #@regions=(0 .. 100); # ".." operator creates integer list 0..3 =0,1,2,3
     foreach(@regions) {$_ *= 0.01}
@@ -78,28 +76,11 @@ foreach $Sym (@elementSyms) #iterate over atomic label
         $group++;
     }
 }
-#print @atomicCoords;
-#
-#At some point I may try to impement grouping
-#my @entries;
-#foreach(@comboList)
-#{
-#    @entries=split(/\+/);
-#    print "Entries are @entries\n";
-#}
-#my $it=0;
-#foreach(@grouplist) {print "$it $_\n"; $it++}
-#print "AAAAAAAAAAAAAAAA\n";
-#foreach(@groupnum) {print "$_\n"}
-#
 #
 ################################
-#this sets the 0 of energy to the fermi level of bulk Li
+#this sets the 0 of energy to the fermi level 
 chomp($fermiTemp=`grep "Fermi energy is" *out`);
 $fermiTemp =~ s/.*is\s+(-?\d+\.\d+).*/$1/;
-#print "System fermi level is $fermiTemp\nFermiFix gives ".&FermiFix."\n";
-#$fermi=$fermiTemp-(&FermiFix-45.4977)-$originshift; #45.4977 is the bulk Li 1s-fermi level difference from /wfurc4/natalieGrp/leplnd6/pwscf/MoreInterface/Li2O/interface/110/small_cell/64k
-#print "Bulk Li fermi level is $fermi\n";
 
 ################################################################
 #Opening the DOS files and adding stuff together 
@@ -132,8 +113,6 @@ foreach $groupl (@grouplist) #$groupl is a string of
                     if(/^\s*(-?\d+\.\d+)\s+(\d+\.\d+)E([+-]\d+)\s+(\d+\.\d+)/) 
                     { 
                         $energy=$1; $density=$Liweight*$2*10**$3/$groupnum[$count-1];
-#                        $energy=$energy-$fermi;
-    #                    print "$file, $energy, $density\n";
                         if($atomhash{$energy} ) {  $atomhash{$energy} = $atomhash{$energy} +$density; } 
                         else{  $atomhash{$energy} =$density; } #if undefined, define it
                     }
@@ -141,14 +120,7 @@ foreach $groupl (@grouplist) #$groupl is a string of
                 close DOSFILE;
             }
     }
-    #foreach $key (sort{$a<=>$b} keys %atomhash){ $plot=$plot.$key."\t".$atomhash{$key}."\n" } 
-    #$plot=$plot."e\n";
-    #
-    #This subtracts the Li metal density from the metallic Li group $Ligroup=3;
-#    if($groupcount==$Ligroup){print $groupl;
- #   foreach $key(keys %atomhash){if(&LiEn($key))
-  #  {print "$key $atomhash{$key}\t"; $atomhash{$key}=$atomhash{$key}-&LiEn($key); print "$atomhash{key}\n"; }}}
-    #energies are keys, densities are values this iterates through all energies 
+   #energies are keys, densities are values this iterates through all energies 
     if(%fullhash){ foreach $key(keys %atomhash){$fullhash{$key}="$fullhash{$key}\t".sprintf("%.6f",$atomhash{$key})}  }
     else{ foreach $key (keys %atomhash) {$fullhash{$key}=sprintf("%.6f",$atomhash{$key})}  }
     %atomhash=(); #reset atomhash b/c new group
@@ -166,8 +138,6 @@ foreach $key (sort { $a <=> $b} keys %fullhash) {print OUTPUT sprintf("%.3f",$ke
 
 chomp($pwd=`pwd`);
 $title= $pwd;
-$title =~ s!.*leplnd6/!!;
-$title =~ s!.*MoreInterface/!!;
 my $plot_filename=$title;
 $plot_filename=~ s!/!-!g;
 #print $title;
@@ -214,8 +184,6 @@ if($PSfile)  #if commandline arg -f then this will output to file; otherwise X11
         "w l lt 2 lc $i lw ".eval(1+(@labels-$i)*1/@labels)." title '$labels[$i]'";
         if( $i<(@labels-1)){print {$PROGRAM} ',' }else
         {print {$PROGRAM} ",'<echo $fermiTemp $ymax' w impulse lc 'black' title 'Fermi En'\n"}
-        #{print {$PROGRAM} ",'<echo ".eval(&FermiFix-45.496)." $ymax' w impulse lc 'black' title 'Fermi En'\n"}
-        #{print {$PROGRAM} ",'<echo ".eval(&FermiFix-45.496)." 0' w impulse lc 'black' title 'Fermi En'\n"}
     }
 #    print {$PROGRAM} "$plot";
 

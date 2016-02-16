@@ -1,6 +1,9 @@
 #!/usr/bin/perl
 
-#I'm not totally sure how this code works. It borrows from the nearest neighbor code, and should output the "interstitial site" (i.e. the site that deviates most strongly from the perfect crystal). It should be run in a directory that contains all of the runs you'd like to investigate in numbered directories of the form 00,01,02...
+#I'm not totally sure how this code works. It borrows from the nearest neighbor code, 
+#and should output the "interstitial site" (i.e. the site that deviates most strongly from the perfect crystal). 
+#It should be run in a directory that contains all of the runs you'd 
+#like to investigate in numbered directories of the form 00,01,02...
 
 #Additionally it requires a perfect output file called "perfect_output" to be in the directory the script runs in.
 
@@ -120,7 +123,7 @@ foreach my $dire (@dir)
 		my $int_atom_pos=pdl;
 		my @atom_arrays;
 
-	#This brace sets up the scope for the calculation portion of this code, and intializing some scalars in the matrix data type
+#This brace sets up the scope for the calculation portion of this code, and intializing some scalars in the matrix data type
 
 
 		################################

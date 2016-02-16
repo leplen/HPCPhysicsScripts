@@ -57,8 +57,6 @@ foreach(@OUTPUT){print OUTFILE; print OUTFILE "\n";}
 
 chomp($pwd=`pwd`);
 $title= $pwd;
-$title =~ s!.*leplnd6/!!;
-$title =~ s!.*MoreInterface/!!;
 my $plot_filename=$title;
 $plot_filename=~ s!/!-!g;
 $plot_filename=$plot_filename."levels";

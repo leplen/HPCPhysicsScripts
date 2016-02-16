@@ -3,7 +3,7 @@
 #takes the pbs file as an optional input 
 #(will just find the .pbs file in the directory if not given an input and creates an XSF file called PBS.xsf
 #
-#N.Lepley 5/2012
+#Created by leplnd6 5/2012
 #
 #This borrows from many of my other scripts, and I try to use PDL (matlab like matrix data types) to simplify the linear algebra as much as possible
 
